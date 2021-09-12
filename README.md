@@ -2,7 +2,7 @@
 ReWave is a pure-C++ 32-bit VM based on a custom ISA that can easily be embedded on another program.
 
 ### Features
-- 14 general-purpose registers
+- 12 general-purpose registers
 - A stack-less memory layout
 - An x86-like instruction set
 - Interrupts
