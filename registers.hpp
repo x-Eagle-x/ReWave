@@ -3,8 +3,8 @@
 
 enum REG
 {
-    A0,
-    B0,
+	A0,
+	B0,
 	C0,
 	D0,
 	AX,
@@ -18,7 +18,7 @@ enum REG
 	AZ,
 	BZ,
 	CZ,
-	DZ,
+	DZ
 };
 
 #endif
