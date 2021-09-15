@@ -10,3 +10,4 @@ ReWave is a pure-C++ 32-bit VM based on a custom ISA that can easily be embedded
 ### Extras
 - A rule-set to compile assembly code through **[customasm](https://github.com/hlorenzi/customasm)**
 - A compiler that compiles ReWave scripts **(under construction)**
+- ReWave **[documentation](https://github.com/x-Eagle-x/ReWave/wiki)**
