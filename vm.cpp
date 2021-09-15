@@ -21,6 +21,7 @@ enum
 
 #define RESET_ACCUMULATORS() acc_a = acc_b = 0
 #define CONTROL_FLOW(x) PREPARE_OPERAND(LEFT); if (acc_a x acc_b) {counter = OPERAND(LEFT); RESET_ACCUMULATORS(); return;} break
+#define OPERATOR(x) PREPARE_OPERANDS(); memory[operands[LEFT]] x OPERAND(RIGHT); break;
 
 void VM::cycle()
 {
@@ -42,29 +43,20 @@ void VM::cycle()
 
         case OP::CALL: PREPARE_OPERAND(LEFT);
         {
-            auto oldpoint = counter, newpoint = operands[LEFT];
-            counter = newpoint;
+            auto oldpoint = counter, newpoint = operands[LEFT]; counter = newpoint;
 
             while (running)
             {
                 cycle();
             }
 
-            counter = oldpoint;
-            running = true;
-
+            running = counter = oldpoint;
             break;
         }
 
         case OP::INT: PREPARE_OPERAND(LEFT);
         {
             interrupt(OPERAND(LEFT));
-            break;
-        }
-
-        case OP::RET:
-        {
-            running = false;
             break;
         }
 
@@ -81,65 +73,17 @@ void VM::cycle()
         case OP::JHE: CONTROL_FLOW(>=);
         case OP::JLE: CONTROL_FLOW(<=);
 
-        case OP::MOV: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] = OPERAND(RIGHT);
-            break;
-        }
+        case OP::MOV: OPERATOR(=);
+        case OP::ADD: OPERATOR(+=);
+        case OP::SUB: OPERATOR(-=);
+        case OP::DIV: OPERATOR(/-);
+        case OP::MUL: OPERATOR(*=);
 
-        case OP::ADD: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] += OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::SUB: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] -= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::DIV: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] /= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::MUL: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] *= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::OR: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] |= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::XOR: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] ^= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::AND: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] &= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::SHL: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] >>= OPERAND(RIGHT);
-            break;
-        }
-
-        case OP::SHR: PREPARE_OPERANDS();
-        {
-            memory[operands[LEFT]] <<= OPERAND(RIGHT);
-            break;
-        }
+        case OP::OR:  OPERATOR(|=);
+        case OP::XOR: OPERATOR(^=);
+        case OP::AND: OPERATOR(&=);
+        case OP::SHL: OPERATOR(<<=);
+        case OP::SHR: OPERATOR(>>=);
 
         case OP::CMP: PREPARE_OPERANDS();
         {
@@ -148,6 +92,7 @@ void VM::cycle()
             break;
         }
 
+        case OP::RET:
         case OP::EXT:
         default:
         {
@@ -155,7 +100,7 @@ void VM::cycle()
             break;
         }
     }
-    
+
     counter++;
 }
 
