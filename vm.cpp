@@ -50,7 +50,7 @@ void VM::cycle()
                 cycle();
             }
 
-            running = counter = oldpoint;
+            running = true; counter = oldpoint;
             break;
         }
 
