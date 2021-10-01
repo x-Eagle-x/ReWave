@@ -35,7 +35,7 @@
     nop => 0x00`8
     ext => 0x01`8
     call {dest: operand} => 0x02`8 @ dest`32
-    int {dest: operand} => 0x03`8 @ dest`32
+    int {srctype: sourcetype}{src: operand} => (0x03 | srctype)`8 @ src`32
     ret => 0x04`8
 
     jmp {dest: operand} => 0x05`8 @ dest`32
