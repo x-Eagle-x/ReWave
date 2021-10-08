@@ -76,7 +76,7 @@ void VM::cycle()
         case OP::MOV: OPERATOR(=);
         case OP::ADD: OPERATOR(+=);
         case OP::SUB: OPERATOR(-=);
-        case OP::DIV: OPERATOR(/-);
+        case OP::DIV: OPERATOR(/=);
         case OP::MUL: OPERATOR(*=);
 
         case OP::OR:  OPERATOR(|=);
