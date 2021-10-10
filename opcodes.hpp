@@ -1,8 +1,9 @@
 #ifndef __OPCODES__
 #define __OPCODES__
 
-#define MEM 0x80
-#define MEM_OPCODE(o) (o + MEM)
+#define MEML(op) (OP) (op | 0b10000000)
+#define MEMR(op) (OP) (op | 0b01000000)
+#define MEMLR(op) (OP) (op | 0b11000000)
 
 enum OP
 {
@@ -31,7 +32,9 @@ enum OP
     NOT,
     SHL,
     SHR,
-    CMP
+    CMP,
+
+    LOAD
 };
 
 #endif
