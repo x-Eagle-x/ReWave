@@ -17,21 +17,28 @@ enum
 
 #define PREPARE_OPERAND(x) get_operand(operands[x], counter, program)
 #define PREPARE_OPERANDS() PREPARE_OPERAND(LEFT); PREPARE_OPERAND(RIGHT)
-#define OPERAND(x) (use_memory ? memory[operands[x]] : operands[x])
+
+#define OPERAND_LEFT() (lr_ptr & PTR_LEFT ? memory[operands[LEFT]] : operands[LEFT])
+#define OPERAND_RIGHT() (lr_ptr & PTR_RIGHT ? memory[operands[RIGHT]] : operands[RIGHT])
 
 #define RESET_ACCUMULATORS() acc_a = acc_b = 0
-#define CONTROL_FLOW(x) PREPARE_OPERAND(LEFT); if (acc_a x acc_b) {counter = OPERAND(LEFT); RESET_ACCUMULATORS(); return;} break
-#define OPERATOR(x) PREPARE_OPERANDS(); memory[operands[LEFT]] x OPERAND(RIGHT); break;
+#define CONTROL_FLOW(x) PREPARE_OPERAND(LEFT); if (acc_a x acc_b) {counter = OPERAND_LEFT(); RESET_ACCUMULATORS(); return;} break
+#define OPERATOR(x) PREPARE_OPERANDS(); memory[OPERAND_LEFT()] x OPERAND_RIGHT(); break;
 
 void VM::cycle()
 {
     opcode = program[counter];
-    use_memory = operands[0] = operands[1] = 0;
+    lr_ptr = operands[0] = operands[1] = 0;
 
-    if (opcode >= MEM)
+    if (opcode & 0b10000000)
     {
-        opcode -= MEM;
-        use_memory = true;
+        opcode &= ~0b10000000;
+        lr_ptr |= PTR_LEFT;
+    }
+    if (opcode & 0b01000000)
+    {
+        opcode &= ~0b01000000;
+        lr_ptr |= PTR_RIGHT;
     }
 
     switch (opcode)
@@ -43,26 +50,29 @@ void VM::cycle()
 
         case OP::CALL: PREPARE_OPERAND(LEFT);
         {
-            auto oldpoint = counter, newpoint = operands[LEFT]; counter = newpoint;
+            auto oldpoint = counter, newpoint = operands[LEFT];
+            counter = newpoint;
 
             while (running)
             {
                 cycle();
             }
 
-            running = true; counter = oldpoint;
+            running = true;
+            counter = oldpoint;
+            
             break;
         }
 
         case OP::INT: PREPARE_OPERAND(LEFT);
         {
-            interrupt(OPERAND(LEFT));
+            interrupt(OPERAND_LEFT());
             break;
         }
 
         case OP::JMP: PREPARE_OPERAND(LEFT);
         {
-            counter = OPERAND(LEFT);
+            counter = OPERAND_LEFT();
             return;
         }
 
@@ -87,10 +97,16 @@ void VM::cycle()
 
         case OP::CMP: PREPARE_OPERANDS();
         {
-            acc_a = memory[operands[LEFT]];
-            acc_b = OPERAND(RIGHT);
+            acc_a = memory[OPERAND_LEFT()];
+            acc_b = OPERAND_RIGHT();
             break;
         }
+        
+        case OP::LOAD: PREPARE_OPERANDS();
+        {
+            memory[OPERAND_LEFT()] = memory[OPERAND_RIGHT()];
+            break;
+        };
 
         case OP::RET:
         case OP::EXT:
