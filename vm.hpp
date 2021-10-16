@@ -15,7 +15,7 @@ typedef unsigned int uint32_t;
 
 enum
 {
-    PTR_NONE,
+    PTR_NONE, /* Unused! */
     PTR_LEFT = 1,
     PTR_RIGHT = 2
 };
