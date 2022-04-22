@@ -1,6 +1,6 @@
 #subruledef register
 {
-    A0 => 0x00
+	A0 => 0x00
 	B0 => 0x01
 	C0 => 0x02
 	D0 => 0x03
@@ -52,8 +52,8 @@
 	jhe {desttype: destinationtype}{dest: operand} => 0x0A`8 @ dest`32
 	jle {desttype: destinationtype}{dest: operand} => 0x0B`8 @ dest`32
 
-    mov {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0C | desttype | srctype)`8 @ dest`32 @ src`32
-    add {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0D | desttype | srctype)`8 @ dest`32 @ src`32
+	mov {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0C | desttype | srctype)`8 @ dest`32 @ src`32
+	add {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0D | desttype | srctype)`8 @ dest`32 @ src`32
 	sub {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0E | desttype | srctype)`8 @ dest`32 @ src`32
 	div {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x0F | desttype | srctype)`8 @ dest`32 @ src`32
 	mul {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x10 | desttype | srctype)`8 @ dest`32 @ src`32
@@ -65,5 +65,5 @@
 	shl {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x15 | desttype | srctype)`8 @ dest`32 @ src`32
 	shr {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x16 | desttype | srctype)`8 @ dest`32 @ src`32
 	cmp {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x17 | desttype | srctype)`8 @ dest`32 @ src`32
-    load {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x18 | desttype | srctype)`8 @ dest`32 @ src`32
+	load {desttype: destinationtype}{dest: operand}, {srctype: sourcetype}{src: operand} => (0x18 | desttype | srctype)`8 @ dest`32 @ src`32
 }
